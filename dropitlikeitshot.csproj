@@ -42,13 +42,23 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KangarooSolver, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\KangarooSolver.dll</HintPath>
+    <Reference Include="KangarooSolver">
+      <HintPath>..\..\..\Program Files\Rhino 6\Plug-ins\Grasshopper\Components\KangarooSolver.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RhinoCommon">
-      <HintPath>lib\RhinoCommon.dll</HintPath>
+      <HintPath>..\..\..\Program Files\Rhino 6\System\RhinoCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -59,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="dropitlikeitshotCommand.cs" />
+    <Compile Include="dropitlikeitshotDisplayConduit.cs" />
     <Compile Include="dropitlikeitshotPlugIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

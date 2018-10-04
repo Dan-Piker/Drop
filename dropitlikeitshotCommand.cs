@@ -87,14 +87,24 @@ namespace dropitlikeitshot
 
             PS.SetParticleList(PtArray.ToList());
 
+            var conduit = new dropitlikeitshotDisplayConduit();
+            conduit.Enabled = true;
+
+            Action redraw = dropitlikeitshotDoOnMainThread.Redraw;
+
             int counter = 0;
             double threshold = 1e-9;
             do
             {
                 PS.Step(Goals, true, threshold); // The step will iterate until either reaching 15ms or the energy threshold
+                conduit.Mesh = PS.GetOutput(Goals)[0] as Mesh;
+                RhinoApp.InvokeAndWait(redraw);
+
                 counter++;
 
             } while (PS.GetvSum() > threshold && counter < 200); //GetvSum returns the current kinetic energy
+
+            conduit.Enabled = false;
 
             Mesh A = PS.GetOutput(Goals)[0] as Mesh;
 
@@ -102,6 +112,14 @@ namespace dropitlikeitshot
             doc.Views.Redraw();
 
             return Result.Success;             
+        }
+    }
+
+    public static class dropitlikeitshotDoOnMainThread
+    {
+        public static void Redraw()
+        {
+            RhinoDoc.ActiveDoc.Views.Redraw();
         }
     }
 }
