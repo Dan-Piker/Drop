@@ -87,24 +87,30 @@ namespace dropitlikeitshot
 
             PS.SetParticleList(PtArray.ToList());
 
-            var conduit = new dropitlikeitshotDisplayConduit();
-            conduit.Enabled = true;
+            //var conduit = new dropitlikeitshotDisplayConduit();
+            //conduit.Enabled = true;
 
-            Action redraw = dropitlikeitshotDoOnMainThread.Redraw;
+            //Action redraw = dropitlikeitshotDoOnMainThread.Redraw;
+            Action show = dropitlikeitshotDoOnMainThread.Show;
+            Action delete = dropitlikeitshotDoOnMainThread.Delete;
 
             int counter = 0;
             double threshold = 1e-9;
             do
             {
                 PS.Step(Goals, true, threshold); // The step will iterate until either reaching 15ms or the energy threshold
-                conduit.Mesh = PS.GetOutput(Goals)[0] as Mesh;
-                RhinoApp.InvokeAndWait(redraw);
+                //conduit.Mesh = PS.GetOutput(Goals)[0] as Mesh;
+
+                dropitlikeitshotDoOnMainThread.Mesh = PS.GetOutput(Goals)[0] as Mesh; ;
+
+                RhinoApp.InvokeAndWait(show);
 
                 counter++;
 
             } while (PS.GetvSum() > threshold && counter < 200); //GetvSum returns the current kinetic energy
 
-            conduit.Enabled = false;
+            //conduit.Enabled = false;
+            RhinoApp.InvokeAndWait(delete);
 
             Mesh A = PS.GetOutput(Goals)[0] as Mesh;
 
@@ -117,9 +123,23 @@ namespace dropitlikeitshot
 
     public static class dropitlikeitshotDoOnMainThread
     {
+        public static Mesh Mesh { get; set; }
+        public static Guid MeshObjId { get; set; }
         public static void Redraw()
         {
             RhinoDoc.ActiveDoc.Views.Redraw();
+        }
+        public static void Delete()
+        {
+            RhinoDoc.ActiveDoc.Objects.Delete(MeshObjId, true);
+        }
+
+        public static void Show()
+        {
+            if (MeshObjId != null)
+                Delete();
+            MeshObjId = RhinoDoc.ActiveDoc.Objects.AddMesh(Mesh);
+            Redraw();
         }
     }
 }
