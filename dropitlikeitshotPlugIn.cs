@@ -1,4 +1,6 @@
-﻿namespace dropitlikeitshot
+﻿using Rhino.PlugIns;
+
+namespace dropitlikeitshot
 {
     ///<summary>
     /// <para>Every RhinoCommon .rhp assembly must have one and only one PlugIn-derived
@@ -25,5 +27,12 @@
         // You can override methods here to change the plug-in behavior on
         // loading and shut down, add options pages to the Rhino _Option command
         // and mantain plug-in wide options in a document.
+
+        protected override LoadReturnCode OnLoad(ref string errorMessage)
+        {
+            Rhino.Runtime.AssemblyResolver.AddSearchFile(@"C:\Program Files\Rhino 6\Plug-ins\Grasshopper\Components\KangarooSolver.dll");
+
+            return base.OnLoad(ref errorMessage);
+        }
     }
 }
